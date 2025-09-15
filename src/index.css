@@ -6,3 +6,59 @@
 @tailwind utilities;
 */
 /* ---------- your provided style.css content (paste exactly) ---------- */
+/* Add these styles to your index.css file */
+
+/* ---------- 3D Dashboard Effects ---------- */
+
+.dashboard-grid {
+  perspective: 1000px;
+}
+
+.dashboard-card {
+  transform-style: preserve-3d;
+  transform: rotateX(10deg) rotateY(15deg) translateZ(0);
+  transition: transform 0.6s ease-out, box-shadow 0.6s ease-out,
+    background-color 0.6s ease-out;
+  background-color: #1a2a3a; /* Dark blue background */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.dashboard-card:hover {
+  transform: rotateX(0deg) rotateY(0deg) translateZ(20px);
+  background-color: #124d85; /* A slightly brighter blue on hover */
+  box-shadow: 0 20px 50px rgba(18, 77, 133, 0.6);
+}
+
+/* Background grid effect for a dynamic feel */
+.dashboard-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.05) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.1;
+  z-index: -1;
+  animation: backgroundPan 15s linear infinite;
+}
+
+@keyframes backgroundPan {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 100% 100%;
+  }
+}

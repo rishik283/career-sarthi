@@ -441,10 +441,15 @@ footer {
 
 /* ---------- convenience aliases so the old classes from your HTML keep working ---------- */
 
+/* IMPORTANT: 'brand-logo' class ko is tarah update kiya gaya hai */
 .brand-logo {
   font-weight: 900;
   font-size: 2rem;
-  background: var(--cta-bg);
+  background: linear-gradient(
+    90deg,
+    #f2316e,
+    #ff5722
+  ); /* Yahan badlav kiya gaya */
   padding: 8px 12px;
   border-radius: 10px;
   line-height: 1;

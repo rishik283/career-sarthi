@@ -5,20 +5,21 @@ import Features from "./components/Features";
 import Courses from "./components/Courses";
 import Jobs from "./components/Jobs";
 import Footer from "./components/Footer";
+import Dashboard from "./components/Dashboard";
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
-  const [authMode, setAuthMode] = useState("login"); // 'login' or 'register'
+  const [authMode, setAuthMode] = useState("login");
   const [emailOrPhone, setEmailOrPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [showDashboard, setShowDashboard] = useState(false);
+  const [userData, setUserData] = useState(null);
+  const [userName, setUserName] = useState("");
 
   const handleLogin = (e) => {
-    e.preventDefault(); // Prevents page reload
-    // In a real app, you would send a request to your backend here
+    e.preventDefault();
     console.log("Logging in with:", { emailOrPhone, password });
-
-    // For this example, we'll just simulate a successful login
     setIsLoggedIn(true);
     setShowAuth(false);
     setEmailOrPhone("");
@@ -26,21 +27,23 @@ export default function App() {
   };
 
   const handleRegister = (e) => {
-    e.preventDefault(); // Prevents page reload
-    // In a real app, you would send a registration request to your backend
-    console.log("Creating account with:", { emailOrPhone, password });
-
-    // For this example, we'll just simulate a successful registration and login
+    e.preventDefault();
+    const name = e.target.elements.name.value;
+    console.log("Creating account with:", { name, emailOrPhone, password });
     setIsLoggedIn(true);
     setShowAuth(false);
     setEmailOrPhone("");
     setPassword("");
+    setUserName(name);
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
     setShowAuth(false);
-    setAuthMode("login"); // Reset auth mode on logout
+    setAuthMode("login");
+    setShowDashboard(false);
+    setUserData(null);
+    setUserName("");
   };
 
   const toggleAuthBox = () => {
@@ -51,6 +54,11 @@ export default function App() {
     setAuthMode(mode);
   };
 
+  const handleFormSubmit = (data) => {
+    setUserData(data);
+    setShowDashboard(true);
+  };
+
   return (
     <div className="bg-gray-900 text-white min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -59,12 +67,17 @@ export default function App() {
           onLogout={handleLogout}
           onGetStarted={toggleAuthBox}
         />
-        <Hero />
-        <Features />
-        <Courses />
-        <Jobs />
+        {showDashboard ? (
+          <Dashboard userData={userData} userName={userName} /> // Updated: Pass userName prop
+        ) : (
+          <>
+            <Hero onFormSubmit={handleFormSubmit} userName={userName} />
+            <Features />
+            <Courses />
+            <Jobs />
+          </>
+        )}
         <Footer />
-
         {showAuth && (
           <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
             <div className="bg-gray-800 p-8 rounded-xl shadow-2xl max-w-sm w-full relative">
@@ -74,14 +87,12 @@ export default function App() {
               >
                 &times;
               </button>
-
               {authMode === "login" ? (
                 <form onSubmit={handleLogin}>
                   <h4 className="text-2xl font-bold mb-4">Login</h4>
                   <p className="text-gray-400 mb-6">
                     Enter your details to log in.
                   </p>
-
                   <div className="flex flex-col space-y-4">
                     <input
                       type="text"
@@ -123,8 +134,14 @@ export default function App() {
                   <p className="text-gray-400 mb-6">
                     Enter your details to get started.
                   </p>
-
                   <div className="flex flex-col space-y-4">
+                    <input
+                      type="text"
+                      name="name"
+                      placeholder="Your Full Name"
+                      className="bg-gray-700 text-white py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400"
+                      required
+                    />
                     <input
                       type="email"
                       placeholder="Email ID"
